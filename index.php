@@ -26,10 +26,13 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $access_token_settings); //setting the PO
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //setting it to eaual to 1 because we are getting strings back.
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true); //but in live work-production we want to set this to true
 
-
-}
 $result = curl_exec($curl);
-curl_close();
+curl_close($curl);
+
+$result = json_decode($results, true);
+echo $results['user']['username'];
+}
+else{
 ?>
 
 <!DOCTYPE html>
@@ -45,3 +48,6 @@ curl_close();
 <script type="text/javascript"></script>
 </body>
 </html>
+<?php
+}
+?>
