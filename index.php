@@ -10,6 +10,20 @@ define('clientSecret', '7c5dfa3acec045a0b2accd52499f73a6');
 define('redirectURI', 'http://localhost/apiproject/index.php');
 define('ImageDirectory', 'pics/');
 
+//function that connects to instagram
+function connectToInstagram($url){
+	$ch = curl_init();
+
+	curl_setopt_array($ch, array{
+		CURLOPT_URL = $url;
+		CURLOPT_RETURNTRANSFER = true;
+		CURLOPT_SSL_VERIFYPEER = false,
+		CURLOPT_SSL_VERIFYHOST = 2,
+	});
+	$result = curl_exec($ch);
+	curl_close($ch);
+
+}
 if (isset($_GET['code'])){
 	$code = ($_GET['code']);
 	$url = 'https://api.instagram.com/oauth/access_token';
