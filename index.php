@@ -26,13 +26,13 @@ function connectToInstagram($url){
 }
 //Function to get userID cause username doesnt allow us to get pictures!
 function getUserID($userName){
-	$url = 'http://api.instagram.com/v1/users/search?q'.$userName.'&client_id='.clientID;
+	$url = 'https://api.instagram.com/v1/users/search?q'.$userName.'&client_id='.clientID;
 	$instagramInfo = connectToInstagram($url);
 	$results = json_decode($instagramInfo, true);
 
-	echo $results['data']['0']['id'];
+	echo $results['data'][0]['id'];
 }
-//function to print out images onto our screen
+//funcltion to print out images onto our screen
 function printImages($userID){
 	$url = 'https://api.instagram.com/v1/users/'.$userID.'/media/recent?client_id='.clientID.'&count=S';
 	$instagramInfo = connectToInstagram($url);
@@ -42,11 +42,24 @@ function printImages($userID){
 		$image_url = $items['images']['low_resolution']['url']; //going to go through all of my results and give myself back the URL of those pictures
 		//because we went to save it in the PHP sever. 
 		echo '<img src=" '.$image_url.'"/><br/>';
+        //calling a function to save that $image_url
+        savePictures($image_url)
+
 	}
 }
+//dunction to save image to server
+function savePictures($image_url){
+	echo $image_url.'<br>'; 
+	$filename = $basename($image_url); // the filename is what we are storing. basename is the PHP built in method that we are using to store $image_url
+	echo $filename . '<br>';
+
+	$destination = imageDirectory . $filename; //we are making sure that the image doesn't exist in the storage
+	file_put_contents($destination, file_get_contents($image_url)); //goes and grabs as imagefile and stores it into our server
+}
+
 
 if (isset($_GET['code'])){
-	$code = ($_GET['code']);
+	$code = $_GET['code'];
 	$url = 'https://api.instagram.com/oauth/access_token';
 	$access_token_settings = array('cliend_id' => clientID,
 									'client_secret' => clientSecret,
@@ -85,7 +98,7 @@ else{
 	<!-- creating a login for people to goand give aproval for our web app to access their instagram account
 	after getting aproval, we are now going to ave the information so that we can play with it.
 	 -->
-	<a href="https:api.instagram.com/oauth/authorize/?client_id=<?php echo clientID;?>&redirect_uri=<?php echo redirectURI;?>&response_type=code">login</a>
+	<a href="https://api.instagram.com/oauth/authorize/?client_id=<?php echo clientID;?>&redirect_uri=<?php echo redirectURI;?>&response_type=code">login</a>
 <script type="text/javascript"></script>
 </body>
 </html>
